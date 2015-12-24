@@ -7,15 +7,36 @@ debugger;
 
 function generateStats(data) {
     let data_new = {};
+    const N = 10000;
+    let rand;
 
-    data_new = data;
+    data_new = _(data).map(function(i, j){
+        rand = Math.floor(Math.random()*N + 1);
+        if (( 0 <= rand ) && ( rand <= N*0.5)) {
+            console.log(rand, j, i.id, i.gender)
+           console.log('b', Date.now() );
+           i.gender = 'female';
+        } else if (( N*0.5 < rand ) && ( rand <= N ))  {
+            console.log(rand, j, i.id, i.gender)
+           i.gender = 'male';
+           console.log('b', Date.now() );
+        }
+        return i;
+    });
+    // data_new = data;
     return data_new;
 }
 
 function summary(data) {
+   console.log('------- in summary data: ', data)
     const summary = {
-        "length" : data.length
+        "length" : data.length,
+        "gender" : {
+            female: _(_.assign({}, data)).filter({gender:'female'}).value(),
+            male  : _(_.assign({}, data)).filter({gender:'male'}).value()
+        }
     };
+    debugger;
     return summary;
 }
 
@@ -57,6 +78,8 @@ module.exports = function generateData(data_bf) {
        if (err) {
            rj('error');
        } else {
+
+           console.log('a', Date.now() );
            console.log(summary(data_new));
            ff(JSON.stringify(data_new));
        };
