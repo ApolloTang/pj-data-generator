@@ -21,16 +21,25 @@ function generateStats(data, ff, rj) {
     const N = 10000;
     let rand;
 
-    data_new = _(data).map(function(i, j){
-        rand = Math.floor(Math.random()*N + 1);
-        if (( 0 <= rand ) && ( rand <= N*0.1)) {
-           i.ge = 'F';
-        } else if (( N*0.1 < rand ) && ( rand <= N ))  {
-           i.ge = 'M';
-        }
-        return i;
-    });
+    data_new = _(data).map(function(datum, j){
+        const split      = [0, 0.1, 0.2, 1];
+        const splitGroup = ['M', 'F', 'D'];
 
+        const spec = [];
+        for (var i=1; i <= split.length-1; i++) {
+            spec.push( [ split[i-1], split[i], splitGroup[i-1] ]);
+        }
+
+        rand = Math.floor(Math.random()*N + 1);
+        _(spec).each(function(i){
+            if (( N*i[0] < rand ) && ( rand <= N*i[1])) {
+                console.log('ssss', N, i)
+               datum.ge = i[2];
+            }
+        }).value();
+
+        return datum;
+    });
 
     ff(JSON.stringify(data_new));
     // data_new = data;

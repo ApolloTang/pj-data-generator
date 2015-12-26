@@ -60,10 +60,13 @@ function getSummary(data) {
     const summary = {
         "length" : data.length,
         "ge" : {
+            D : _(_.assign({}, data)).filter({ge:'D'}).value(),
             F : _(_.assign({}, data)).filter({ge:'F'}).value(),
             M: _(_.assign({}, data)).filter({ge:'M'}).value()
         }
     };
+
+    console.log('d: ' , summary.ge.D.length);
     console.log('f: ' , summary.ge.F.length);
     console.log('m: ' , summary.ge.M.length);
 
