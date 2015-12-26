@@ -3,60 +3,38 @@ const Promise = require('bluebird');
 const _ = require('lodash');
 
 const cf = require('./conf');
-debugger;
 
-function generateStats(data) {
+
+function startNewSet(howMany, ff, rj) {
+    const dataSet = [];
+    let i = howMany + 1;
+    while (--i) {
+        const copyOfSchema_withId = _.assign({}, cf.SCHEMA, {id:_.uniqueId()})
+        dataSet.push(copyOfSchema_withId);
+    }
+    ff(JSON.stringify(dataSet));
+}
+
+
+function generateStats(data, ff, rj) {
     let data_new = {};
     const N = 10000;
     let rand;
 
     data_new = _(data).map(function(i, j){
         rand = Math.floor(Math.random()*N + 1);
-        if (( 0 <= rand ) && ( rand <= N*0.5)) {
-            console.log(rand, j, i.id, i.gender)
-           console.log('b', Date.now() );
-           i.gender = 'female';
-        } else if (( N*0.5 < rand ) && ( rand <= N ))  {
-            console.log(rand, j, i.id, i.gender)
-           i.gender = 'male';
-           console.log('b', Date.now() );
+        if (( 0 <= rand ) && ( rand <= N*0.1)) {
+           i.ge = 'F';
+        } else if (( N*0.1 < rand ) && ( rand <= N ))  {
+           i.ge = 'M';
         }
         return i;
     });
+
+
+    ff(JSON.stringify(data_new));
     // data_new = data;
-    return data_new;
-}
-
-function summary(data) {
-   console.log('------- in summary data: ', data)
-    const summary = {
-        "length" : data.length,
-        "gender" : {
-            female: _(_.assign({}, data)).filter({gender:'female'}).value(),
-            male  : _(_.assign({}, data)).filter({gender:'male'}).value()
-        }
-    };
-    debugger;
-    return summary;
-}
-
-function startNewSet(howMany) {
-    console.log('---- starting new set -----');
-    let dataFromSchema = generateNewSetFromSchema(howMany);
-    let brandNewSet = _(dataFromSchema).map(function(i){
-        i.id = _.uniqueId();
-        return i;
-    }).value();
-    return brandNewSet;
-}
-
-function generateNewSetFromSchema(howMany) {
-    const dataSet = [];
-    let i = howMany + 1;
-    while (--i) {
-        dataSet.push(_.assign({}, cf.SCHEMA));
-    }
-    return dataSet;
+    // return data_new;
 }
 
 module.exports = function generateData(data_bf) {
@@ -66,23 +44,23 @@ module.exports = function generateData(data_bf) {
 
         if (data_bf) {
             if (cf.START_NEW_SET) {
-                data_new = startNewSet(cf.HOW_MANY);
+                data_new = startNewSet(cf.HOW_MANY, ff, rj);
             } else {
                 const data = JSON.parse(data_bf.toString());
-                data_new = generateStats(data);
+                data_new = generateStats(data, ff, rj);
             }
        } else {
-            data_new = startNewSet(cf.HOW_MANY);
+            data_new = startNewSet(cf.HOW_MANY, ff, rj);
        }
 
-       if (err) {
-           rj('error');
-       } else {
-
-           console.log('a', Date.now() );
-           console.log(summary(data_new));
-           ff(JSON.stringify(data_new));
-       };
+       // if (err) {
+       //     rj('error');
+       // } else {
+       //
+       //     console.log('a', Date.now() );
+       //     console.log(summary(data_new));
+       //     ff(JSON.stringify(data_new));
+       // };
     });
 }
 
