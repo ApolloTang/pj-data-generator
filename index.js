@@ -47,29 +47,35 @@ function saveData(data) {
 function summarizeDataInFile(fileName) {
     fs.readFileAsync(dataFile)
         .then(function(data){
-
             const summary = getSummary(JSON.parse(data.toString()));
-            // console.log('summary: ', summary);
-
         })
 }
 
 
 function getSummary(data) {
-   // console.log('------- in summary data: ', data)
     const summary = {
         "length" : data.length,
         "ge" : {
             D : _(_.assign({}, data)).filter({ge:'D'}).value(),
             F : _(_.assign({}, data)).filter({ge:'F'}).value(),
-            M: _(_.assign({}, data)).filter({ge:'M'}).value()
+            M : _(_.assign({}, data)).filter({ge:'M'}).value()
+        },
+        "ct" : {
+            T : _(_.assign({}, data)).filter({ct:'T'}).value(),
+            M : _(_.assign({}, data)).filter({ct:'M'}).value(),
+            V : _(_.assign({}, data)).filter({ct:'V'}).value(),
+            D : _(_.assign({}, data)).filter({ct:'D'}).value()
         }
     };
 
     console.log('d: ' , summary.ge.D.length);
     console.log('f: ' , summary.ge.F.length);
     console.log('m: ' , summary.ge.M.length);
-
+    console.log('- - - - - - - - - -');
+    console.log('t: ' , summary.ct.T.length);
+    console.log('m: ' , summary.ct.M.length);
+    console.log('v: ' , summary.ct.V.length);
+    console.log('d: ' , summary.ct.D.length);
     return summary;
 }
 
