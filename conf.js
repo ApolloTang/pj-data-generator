@@ -2,7 +2,7 @@ const c = {};
 
 // c.START_NEW_SET = true;
 c.START_NEW_SET = false;
-c.HOW_MANY = 5000;
+c.HOW_MANY = 10;
 c.SCHEMA = {
     'id' : '', // id
     'dd' : '', // date
