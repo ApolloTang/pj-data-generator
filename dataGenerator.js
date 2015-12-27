@@ -37,14 +37,25 @@ function cb(datum, opts) {
 }
 
 function generateStats(data, ff, rj) {
-    let data_new = {};
-    data_new = _(data)
-    .map(function(datum){ return cb(datum, cf.statsSpec.ge); })
-    .map(function(datum){ return cb(datum, cf.statsSpec.ct); })
-    .map(function(datum){ return cb(datum, cf.statsSpec.ag); })
-    .map(function(datum){ return cb(datum, cf.statsSpec.os); })
-    .value();
+    // [!] KEEP THE FOLLOWING AS DOCUMENTATION
+    //
+    // let data_new = [];
+    // data_new = _(data)
+    // .map(function(datum){ return cb(datum, cf.statsSpec.ge); })
+    // .map(function(datum){ return cb(datum, cf.statsSpec.ct); })
+    // .map(function(datum){ return cb(datum, cf.statsSpec.ag); })
+    // .map(function(datum){ return cb(datum, cf.statsSpec.os); })
+    // .value();
+    // ff(JSON.stringify(data_new));
 
+    // [!] See above to understand how the following works
+    // This is a dynamic version of the above.
+    const data_new = _.reduce( Object.keys(cf.statsSpec), function(acc, item ){
+        return acc.map( function(datum){
+            return cb(datum, cf.statsSpec[item]);
+        })
+    }, _(data))
+    .value();
     ff(JSON.stringify(data_new));
 }
 
