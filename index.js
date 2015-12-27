@@ -10,34 +10,26 @@ const generateData = require('./dataGenerator.js');
 
 const dataFile = './data/data.json';
 
-let stat = {
-    dataFileExist : false,
-};
-
-
-
 fs.openAsync(dataFile, 'r+')
     .then(function(){
         console.log('reading ' + dataFile + '... ');
         fs.readFileAsync(dataFile)
             .then(generateData)
             .then(saveData)
-            .then(function() {
-                summarizeDataInFile(dataFile)
-            });
+            .done(function(data) { summarizeDataInFile(dataFile) });
     }, function(){
         console.log('file not exist');
         generateData(null)
             .then(saveData)
     });
 
+
 function saveData(data) {
     return new Promise(function(ff, rj){
         fs.writeFileAsync(dataFile, data)
             .then( function(){
-                // save success
                 console.log('Data saved')
-                ff();
+                ff(data);
             }, function(){
                 console.log('Fail to save data')
             });
@@ -46,36 +38,28 @@ function saveData(data) {
 
 function summarizeDataInFile(fileName) {
     fs.readFileAsync(dataFile)
-        .then(function(data){
-            const summary = getSummary(JSON.parse(data.toString()));
-        })
+        .then( function(b){ generateSummary( JSON.parse(b.toString()) )
+        .then( console.log )
+    });
 }
 
-
-function getSummary(data) {
-    const summary = {
-        "length" : data.length,
-        "ge" : {
-            D : _(_.assign({}, data)).filter({ge:'D'}).value(),
-            F : _(_.assign({}, data)).filter({ge:'F'}).value(),
-            M : _(_.assign({}, data)).filter({ge:'M'}).value()
-        },
-        "ct" : {
-            T : _(_.assign({}, data)).filter({ct:'T'}).value(),
-            M : _(_.assign({}, data)).filter({ct:'M'}).value(),
-            V : _(_.assign({}, data)).filter({ct:'V'}).value(),
-            D : _(_.assign({}, data)).filter({ct:'D'}).value()
-        }
-    };
-
-    console.log('d: ' , summary.ge.D.length);
-    console.log('f: ' , summary.ge.F.length);
-    console.log('m: ' , summary.ge.M.length);
-    console.log('- - - - - - - - - -');
-    console.log('t: ' , summary.ct.T.length);
-    console.log('m: ' , summary.ct.M.length);
-    console.log('v: ' , summary.ct.V.length);
-    console.log('d: ' , summary.ct.D.length);
-    return summary;
+function generateSummary(data) {
+    return new Promise(function(ff, rj){
+        let summary = '';
+        summary += 'Data length: ' + data.length + '\n';
+        _(cf.statsSpec).each(function(i){
+            const dimension = i.dimension;
+            const splitGroup = i.splitGroup
+            summary += 'dimension: ' + i.dimension + '\n';
+            _(splitGroup).each(function(group){
+                let filter = {};
+                filter[dimension] = group;
+                const filtered = _( data ).filter(filter).value()
+                const length = filtered.length
+                summary += group + ': ' + length + '\n';
+            }).value();
+        }).value();
+        ff(summary);
+    });
 }
 

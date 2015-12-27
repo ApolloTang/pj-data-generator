@@ -39,12 +39,11 @@ function cb(datum, opts) {
 function generateStats(data, ff, rj) {
     let data_new = {};
     data_new = _(data)
-    .map(function(datum){
-        return cb(datum, cf.statsSpec.ge);
-    })
-    .map(function(datum){
-        return cb(datum, cf.statsSpec.ct);
-    }).value();
+    .map(function(datum){ return cb(datum, cf.statsSpec.ge); })
+    .map(function(datum){ return cb(datum, cf.statsSpec.ct); })
+    .map(function(datum){ return cb(datum, cf.statsSpec.ag); })
+    .map(function(datum){ return cb(datum, cf.statsSpec.os); })
+    .value();
 
     ff(JSON.stringify(data_new));
 }
@@ -65,6 +64,7 @@ module.exports = function generateData(data_bf) {
             data_new = startNewSet(cf.HOW_MANY, ff, rj);
        }
     });
-}
+};
+
 
 
