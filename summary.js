@@ -21,8 +21,8 @@ function generateSummary(data) {
     return new Promise(function(ff, rj){
         let summary = '';
         summary += 'Data length: ' + data.length + '\n';
-        Object.keys(cf.statsSpec).forEach(function(key){
-            let i = cf.statsSpec[key];
+        Object.keys(cf.statsSpecs).forEach(function(key){
+            let i = cf.statsSpecs[key];
             const dimension = key;
             const splitGroup = i.splitGroup
             summary += 'dimension: ' + i.dimension + '\n';

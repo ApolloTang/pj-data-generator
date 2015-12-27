@@ -1,10 +1,10 @@
-const c = {};
+const cf = {};
 
-c.dataFile = './data/data.json';
+cf.dataFile = './data/data.json';
 
-c.HOW_MANY = 10000;
+cf.HOW_MANY = 10000;
 
-c.SCHEMA = {
+cf.SCHEMA = {
     'id' : '', // id
     'dd' : '', // date
     'ct' : '', // city
@@ -13,27 +13,23 @@ c.SCHEMA = {
     'os' : ''  // os
 };
 
-c.statsSpec = {
+cf.statsSpecs = {
     // dd:
     ct: {
         split: [0, 0.1, 0.2, 0.5, 1],
         splitGroup: ['T', 'M', 'V', 'D'],
-        // dimension: 'ct'
     },
     ge: {
         split: [0, 0.1, 0.2, 1],
         splitGroup:['M', 'F', 'D'],
-        // dimension: 'ge'
     },
     ag: {
         split: [0, 0.33, 0.50, 0.75, 1],
         splitGroup: ['tn', 'ya', 'ad', 'se'],
-        // dimension: 'ag'
     },
     os: {
         split: [0, 0.1, 0.2, 0.3, 1],
         splitGroup: ['an', 'ap', 'bb', 'wn'],
-        // dimension: 'os'
     }
 }
-module.exports = c;
+module.exports = cf;
