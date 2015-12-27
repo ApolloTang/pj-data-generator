@@ -9,18 +9,21 @@ const dataFile = cf.dataFile;
 
 
 module.exports = function summarizeDataInFile(fileName) {
+    // @TODO open file
     fs.readFileAsync(dataFile)
         .then( function(b){ generateSummary( JSON.parse(b.toString()) )
         .then( console.log )
     });
-}
+    // @TODO close file
+};
 
 function generateSummary(data) {
     return new Promise(function(ff, rj){
         let summary = '';
         summary += 'Data length: ' + data.length + '\n';
-        _(cf.statsSpec).each(function(i){
-            const dimension = i.dimension;
+        Object.keys(cf.statsSpec).forEach(function(key){
+            let i = cf.statsSpec[key];
+            const dimension = key;
             const splitGroup = i.splitGroup
             summary += 'dimension: ' + i.dimension + '\n';
             _(splitGroup).each(function(group){
@@ -30,7 +33,8 @@ function generateSummary(data) {
                 const length = filtered.length
                 summary += group + ': ' + length + '\n';
             }).value();
-        }).value();
+        });
+
         ff(summary);
     });
 }

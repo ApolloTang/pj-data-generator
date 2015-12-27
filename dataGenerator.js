@@ -11,13 +11,14 @@ function startNewSet(howMany, ff, rj) {
         const copyOfSchema_withId = _.assign({}, cf.SCHEMA, {id:_.uniqueId()})
         dataSet.push(copyOfSchema_withId);
     }
-    ff(JSON.stringify(dataSet));
+    return dataSet;
 }
 
-function cb(datum, opts) {
-    const split      = opts.split;
-    const splitGroup = opts.splitGroup;
-    const dimension  = opts.dimension;
+
+function cb(datum, key, statsSpec) {
+    const split      = statsSpec.split;
+    const splitGroup = statsSpec.splitGroup;
+    const dimension  = key;
 
     const spec = [];
     for (var i=1; i <= split.length-1; i++) {
@@ -27,10 +28,9 @@ function cb(datum, opts) {
     const N = 10000;
     const rand = Math.floor(Math.random()*N + 1);
 
-    _(spec).each(function(i){
+    _(spec).each(function(i, k){
         if (( N*i[0] < rand ) && ( rand <= N*i[1])) {
-            datum[dimension] = i[2];
-        }
+            datum[dimension] = i[2]; }
     }).value();
 
     return datum;
@@ -50,9 +50,9 @@ function generateStats(data, ff, rj) {
 
     // [!] See above to understand how the following works
     // This is a dynamic version of the above.
-    const data_new = _.reduce( Object.keys(cf.statsSpec), function(acc, item ){
+    const data_new = _.reduce( Object.keys(cf.statsSpec), function(acc, key ){
         return acc.map( function(datum){
-            return cb(datum, cf.statsSpec[item]);
+            return cb(datum, key, cf.statsSpec[key]);
         })
     }, _(data))
     .value();
@@ -61,18 +61,14 @@ function generateStats(data, ff, rj) {
 
 module.exports = function generateData(data_bf) {
     return new Promise(function(ff, rj){
-        let err = '';
-        let data_new = {};
-
         if (data_bf) {
-            if (cf.START_NEW_SET) {
-                data_new = startNewSet(cf.HOW_MANY, ff, rj);
-            } else {
-                const data = JSON.parse(data_bf.toString());
-                data_new = generateStats(data, ff, rj);
-            }
+            // Datafile exist, update with new stats specification
+            const data = JSON.parse(data_bf.toString());
+            data_new = generateStats(data, ff, rj);
        } else {
-            data_new = startNewSet(cf.HOW_MANY, ff, rj);
+            // Datafile does not exist,  start new one
+            const data_newSet = startNewSet(cf.HOW_MANY, ff, rj);
+            data_new = generateStats(data_newSet, ff, rj);
        }
     });
 };

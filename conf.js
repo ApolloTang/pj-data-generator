@@ -1,9 +1,9 @@
 const c = {};
 
 c.dataFile = './data/data.json';
-// c.START_NEW_SET = true;
-c.START_NEW_SET = false;
-c.HOW_MANY = 10;
+
+c.HOW_MANY = 10000;
+
 c.SCHEMA = {
     'id' : '', // id
     'dd' : '', // date
@@ -16,24 +16,24 @@ c.SCHEMA = {
 c.statsSpec = {
     // dd:
     ct: {
-        split: [0, 0.1, 0.2, 0.3, 1],
+        split: [0, 0.1, 0.2, 0.5, 1],
         splitGroup: ['T', 'M', 'V', 'D'],
-        dimension: 'ct'
+        // dimension: 'ct'
     },
     ge: {
         split: [0, 0.1, 0.2, 1],
         splitGroup:['M', 'F', 'D'],
-        dimension: 'ge'
+        // dimension: 'ge'
     },
     ag: {
         split: [0, 0.33, 0.50, 0.75, 1],
         splitGroup: ['tn', 'ya', 'ad', 'se'],
-        dimension: 'ag'
+        // dimension: 'ag'
     },
     os: {
         split: [0, 0.1, 0.2, 0.3, 1],
         splitGroup: ['an', 'ap', 'bb', 'wn'],
-        dimension: 'os'
+        // dimension: 'os'
     }
 }
 module.exports = c;

@@ -17,11 +17,15 @@ fs.openAsync(dataFile, 'r+')
         fs.readFileAsync(dataFile)
             .then(generateData)
             .then(saveData)
+            //@TODO close file
             .done(function(data) { summarizeDataInFile(dataFile) });
     }, function(){
-        console.log('file not exist');
+        console.log('File not exist, start new one');
+        //@TODO make directory "/data/"
         generateData(null)
             .then(saveData)
+            //@TODO close file
+            .done(function(data) { summarizeDataInFile(dataFile) });
     });
 
 
