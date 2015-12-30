@@ -20,7 +20,7 @@ cf.statsSpecs = {
         splitGroup: ['T', 'M', 'V', 'D'],
     },
     ge: {
-        split: [0, 0.1, 0.2, 1],
+        split: [0, 0.4999, 1, 1],
         splitGroup:['M', 'F', 'D'],
     },
     ag: {
