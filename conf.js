@@ -2,7 +2,7 @@ const cf = {};
 
 cf.dataFile = './data/data.json';
 
-cf.HOW_MANY = 10000;
+cf.HOW_MANY = 100;
 
 cf.SCHEMA = {
     'id' : '', // id
@@ -13,7 +13,29 @@ cf.SCHEMA = {
     'os' : ''  // os
 };
 
-cf.filter = {};
+// Note that filter is not applied for the initial set
+// Select one from each dimension
+// If filter is empty all data will apply with new stats
+cf.filter = {
+    // 'ct':'T',
+    // 'ct':'M',
+    // 'ct':'V',
+    // 'ct':'D',
+
+    'ge':'F',
+    // 'ge':'M',
+
+    // 'ag':'tn',
+    // 'ag':'ya',
+    // 'ag':'ad',
+    // 'ag':'se',
+
+    // 'os':'an',
+    // 'os':'ya',
+    // 'os':'ad',
+    // 'os':'bb',
+    // 'os':'wn',
+};
 
 cf.statsSpecs = {
     // ct: {
@@ -24,14 +46,16 @@ cf.statsSpecs = {
     //     split: [0, 0.4999, 1, 1],
     //     splitGroup:['M', 'F', 'D']
     // },
-    ag: {
-        split: [0, 0.33, 0.50, 0.75, 1],
-        splitGroup: ['tn', 'ya', 'ad', 'se']
-    },
-    // os: {
-    //     split: [0, 0.1, 0.2, 0.3, 1],
-    //     splitGroup: ['an', 'ap', 'bb', 'wn']
+    // ag: {
+    //     split: [0, 0.33, 0.50, 0.75, 1],
+    //     // split: [0, 0.75, 0.85, 0.95, 1],
+    //     splitGroup: ['tn', 'ya', 'ad', 'se']
     // },
+    os: {
+        // split: [0, 0.1, 0.2, 0.3, 1],
+        split: [0, 0, 0, 1, 1],
+        splitGroup: ['an', 'ap', 'bb', 'wn']
+    },
     // dd: {
     //     split: [
     //           0
